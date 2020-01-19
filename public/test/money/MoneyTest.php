@@ -10,11 +10,24 @@ class MoneyTest extends TestCase
 {
     public function testMultiplication()
     {
-        $five = new Dollar(5);
-        $product1 = $five->times(2);
-        $this->assertEquals(10, $product1->amount());
+        $this->assertEquals(
+            new Dollar(10),
+            (new Dollar(5))->times(2)
+        );
 
-        $product2 = $five->times(3);
-        $this->assertEquals(15, $product2->amount());
+        $this->assertEquals(
+            new Dollar(15),
+            (new Dollar(5))->times(3)
+        );
+    }
+
+    public function testEqual()
+    {
+        $this->assertTrue(
+            (new Dollar(5))->equal(new Dollar(5))
+        );
+        $this->assertFalse(
+            (new Dollar(5))->equal(new Dollar(6))
+        );
     }
 }
