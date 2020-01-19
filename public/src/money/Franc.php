@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\src\money;
 
-class Dollar extends Money
+class Franc extends Money
 {
     public function times(int $multiplier): Money
     {
