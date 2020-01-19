@@ -14,20 +14,20 @@ class Money
      */
     private $currency;
 
-    public function __construct(int $value, string $currency)
+    public function __construct(int $amount, string $currency)
     {
-        $this->amount = $value;
+        $this->amount = $amount;
         $this->currency = $currency;
     }
 
-    public static function dollar(int $value): self
+    public static function dollar(int $amount): self
     {
-        return new self($value, 'USD');
+        return new self($amount, 'USD');
     }
 
-    public static function franc(int $value): self
+    public static function franc(int $amount): self
     {
-        return new self($value, 'CHF');
+        return new self($amount, 'CHF');
     }
 
     public function times(int $multiplier): self
