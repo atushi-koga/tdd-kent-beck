@@ -3,54 +3,38 @@ declare(strict_types=1);
 
 namespace App\test\money;
 
-use App\src\money\Dollar;
-use App\src\money\Franc;
+use App\src\money\Money;
 use PHPUnit\Framework\TestCase;
 
 class MoneyTest extends TestCase
 {
     public function testMultiplication()
     {
-        $this->assertEquals(
-            new Dollar(10),
-            (new Dollar(5))->times(2)
-        );
+        $fiveDollar = Money::dollar(5);
+        $this->assertEquals(Money::dollar(10), $fiveDollar->times(2));
+        $this->assertEquals(Money::dollar(15), $fiveDollar->times(3));
+        $fiveFranc = Money::franc(5);
+        $this->assertEquals(Money::franc(10), $fiveFranc->times(2));
+        $this->assertEquals(Money::franc(15), $fiveFranc->times(3));
 
-        $this->assertEquals(
-            new Dollar(15),
-            (new Dollar(5))->times(3)
-        );
-    }
-
-    public function testFrancMultiplication()
-    {
-        $this->assertEquals(
-            new Franc(10),
-            (new Franc(5))->times(2)
-        );
-
-        $this->assertEquals(
-            new Franc(15),
-            (new Franc(5))->times(3)
-        );
     }
 
     public function testEquality()
     {
         $this->assertTrue(
-            (new Dollar(5))->equal(new Dollar(5))
+            Money::dollar(5)->equal(Money::dollar(5))
         );
         $this->assertFalse(
-            (new Dollar(5))->equal(new Dollar(6))
+            Money::dollar(5)->equal(Money::dollar(6))
         );
         $this->assertTrue(
-            (new Franc(5))->equal(new Franc(5))
+            Money::franc(5)->equal(Money::franc(5))
         );
         $this->assertFalse(
-            (new Franc(5))->equal(new Franc(6))
+            Money::franc(5)->equal(Money::franc(6))
         );
         $this->assertFalse(
-            (new Dollar(5))->equal(new Franc(5))
+            Money::dollar(5)->equal(Money::franc(5))
         );
     }
 }

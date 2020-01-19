@@ -5,6 +5,11 @@ namespace App\src\money;
 
 class Franc extends Money
 {
+    public function __construct(int $value)
+    {
+        $this->amount = $value;
+    }
+
     public function times(int $multiplier): Money
     {
         return new self($this->amount * $multiplier);

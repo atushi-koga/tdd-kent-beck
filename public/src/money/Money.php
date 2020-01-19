@@ -3,22 +3,24 @@ declare(strict_types=1);
 
 namespace App\src\money;
 
-class Money
+abstract class Money
 {
     /**
      * @var int
      */
     protected $amount;
 
-    public function __construct(int $value)
+    public static function dollar(int $value): self
     {
-        $this->amount = $value;
+        return new Dollar($value);
     }
 
-    public function times(int $multiplier): self
+    public static function franc(int $value): self
     {
-        return new self($this->amount * $multiplier);
+        return new Franc($value);
     }
+
+    abstract function times(int $multiplier): self;
 
     public function equal(self $other): bool
     {
