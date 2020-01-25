@@ -5,5 +5,5 @@ namespace App\src\money;
 
 interface Expression
 {
-    public function reduced(string $toCurrency): Money;
+    public function reduced(Bank $bank, string $toCurrency): Money;
 }

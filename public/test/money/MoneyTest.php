@@ -5,6 +5,9 @@ namespace App\test\money;
 
 use App\src\money\Bank;
 use App\src\money\Money;
+use App\src\money\Pair;
+use App\src\money\Rates;
+use App\src\money\Ratio;
 use App\src\money\Sum;
 use PHPUnit\Framework\TestCase;
 
@@ -21,23 +24,33 @@ class MoneyTest extends TestCase
     {
         $fiveDollar = Money::dollar(5);
         $result = $fiveDollar->plus($fiveDollar);
-        $bank = new Bank();
+        $bank = new Bank(new Rates([]));
         $this->assertEquals(Money::dollar(10), $bank->reduced($result, 'USD'));
     }
 
     public function testReduceMoney()
     {
-        $bank = new Bank();
+        $bank = new Bank(new Rates([]));
         $this->assertEquals(
             Money::dollar(5),
             $bank->reduced(Money::dollar(5), 'USD')
         );
     }
 
+    public function testReduceMoneyDifferentCurrency()
+    {
+        $bank = new Bank(new Rates([]));
+        $bank = $bank->addRate(new Pair('CHF', 'USD'), new Ratio(2));
+        $this->assertEquals(
+            Money::dollar(1),
+            $bank->reduced(Money::franc(2), 'USD')
+        );
+    }
+
     public function testReduceSum()
     {
         $sum = new Sum(Money::dollar(4), Money::dollar(6));
-        $bank = new Bank();
+        $bank = new Bank(new Rates([]));
         $this->assertEquals(
             Money::dollar(10),
             $bank->reduced($sum, 'USD')

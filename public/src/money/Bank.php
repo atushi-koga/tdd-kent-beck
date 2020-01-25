@@ -5,8 +5,28 @@ namespace App\src\money;
 
 class Bank
 {
+    /**
+     * @var Rates
+     */
+    private $rates;
+
+    public function __construct(Rates $rates)
+    {
+        $this->rates = $rates;
+    }
+
     public function reduced(Expression $expression, string $toCurrency): Money
     {
-        return $expression->reduced($toCurrency);
+        return $expression->reduced($this, $toCurrency);
+    }
+
+    public function addRate(Pair $pair, Ratio $ratio): self
+    {
+        return new self($this->rates->put(new Rate($pair, $ratio)));
+    }
+
+    public function ratio(Pair $pair): Ratio
+    {
+        return $pair->same() ? Ratio::one() : $this->rates->findOrFail($pair)->ratio();
     }
 }
