@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\src\money;
 
-class Money
+class Money implements Expression
 {
     /**
      * @var int
@@ -40,8 +40,23 @@ class Money
         return $this == $other;
     }
 
+    public function amount(): int
+    {
+        return $this->amount;
+    }
+
     public function currency(): string
     {
         return $this->currency;
+    }
+
+    public function plus(Money $other): Sum
+    {
+        return new Sum($this, $other);
+    }
+
+    public function reduced(string $toCurrency): Money
+    {
+        return $this;
     }
 }
