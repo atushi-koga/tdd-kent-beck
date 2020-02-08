@@ -20,9 +20,9 @@ class Bank
         return $expression->reduced($this, $toCurrency);
     }
 
-    public function addRate(Pair $pair, Ratio $ratio): self
+    public function addRate(Rate $rate): self
     {
-        return new self($this->rates->put(new Rate($pair, $ratio)));
+        return new self($this->rates->put($rate));
     }
 
     public function ratio(Pair $pair): Ratio

@@ -6,6 +6,7 @@ namespace App\test\money;
 use App\src\money\Bank;
 use App\src\money\Money;
 use App\src\money\Pair;
+use App\src\money\Rate;
 use App\src\money\Rates;
 use App\src\money\Ratio;
 use App\src\money\Sum;
@@ -39,8 +40,8 @@ class MoneyTest extends TestCase
 
     public function testReduceMoneyDifferentCurrency()
     {
-        $bank = new Bank(new Rates([]));
-        $bank = $bank->addRate(new Pair('CHF', 'USD'), new Ratio(2));
+        $rate = new Rate(new Pair('CHF', 'USD'), new Ratio(2));
+        $bank = new Bank(new Rates([$rate]));
         $this->assertEquals(
             Money::dollar(1),
             $bank->reduced(Money::franc(2), 'USD')
@@ -58,10 +59,27 @@ class MoneyTest extends TestCase
     }
 
     public function testPlusReturnsSum() {
+        $fourDollar = Money::dollar(4);
+        $sixDollar = Money::dollar(6);
+        $this->assertEquals(
+            new Sum($fourDollar, $sixDollar),
+            $fourDollar->plus($sixDollar)
+        );
+    }
+
+    public function testPlusDifferentCurrency()
+    {
         $fiveDollar = Money::dollar(5);
-        $result = $fiveDollar->plus($fiveDollar);
-        $this->assertEquals($fiveDollar, $result->augend);
-        $this->assertEquals($fiveDollar, $result->addend);
+        $tenFranc = Money::franc(10);
+        $bank = new Bank(
+            new Rates([
+                new Rate(new Pair('CHF', 'USD'), new Ratio(2))
+            ])
+        );
+        $this->assertEquals(
+            Money::dollar(10),
+            $bank->reduced($fiveDollar->plus($tenFranc), 'USD')
+        );
     }
 
     public function testEquality()
@@ -75,5 +93,37 @@ class MoneyTest extends TestCase
     {
         $this->assertEquals('USD', Money::dollar(1)->currency());
         $this->assertEquals('CHF', Money::franc(1)->currency());
+    }
+
+    /**
+     * @noinspection NonAsciiCharacters
+     * @test
+     */
+    public function 合計値に対し加算する()
+    {
+        $bank = new Bank(
+            new Rates([
+                new Rate(new Pair('CHF', 'USD'), new Ratio(2)),
+            ])
+        );
+        $oneDollar = Money::dollar(1);
+        $twoDollar = Money::dollar(2);
+        $threeDollar = Money::dollar(3);
+        $this->assertEquals(
+            Money::dollar(6),
+            (new Sum($oneDollar, $twoDollar))
+                ->plus($threeDollar)
+                ->reduced($bank, 'USD')
+        );
+
+        $twoDollar = Money::dollar(2);
+        $twoFranc = Money::franc(2);
+        $fourFranc = Money::franc(4);
+        $this->assertEquals(
+            Money::dollar(5),
+            (new Sum($twoDollar, $twoFranc))
+            ->plus($fourFranc)
+            ->reduced($bank, 'USD')
+        );
     }
 }

@@ -10,7 +10,7 @@ class Ratio
      */
     private $value;
 
-    public function __construct(int $value)
+    public function __construct(int $value) // @todo: 小数に対応させる
     {
         $this->value = $value;
     }

@@ -30,7 +30,7 @@ class Money implements Expression
         return new self($amount, 'CHF');
     }
 
-    public function times(int $multiplier): self
+    public function times(int $multiplier): Expression
     {
         return new self($this->amount * $multiplier, $this->currency);
     }
@@ -50,7 +50,7 @@ class Money implements Expression
         return $this->currency;
     }
 
-    public function plus(Money $other): Sum
+    public function plus(Expression $other): Expression
     {
         return new Sum($this, $other);
     }
